@@ -1,4 +1,7 @@
-use std::{num::ParseIntError, io::{self, Write}};
+use std::{
+    num::ParseIntError, 
+    io::{self, Write}
+};
 
 /// Converts string to integer, otherwise error
 pub fn convert_to_integer(to_parse: &str) -> Result<i64, ParseIntError> {
@@ -32,8 +35,6 @@ pub fn get_input_as_integer(line: &str) -> i64 {
     x
 }
 
-pub fn split_str_to_vec(s: String, ch: char) -> Vec<String>{
-    s.split(ch)
-        .map(|v| v.to_string())
-        .collect()
+pub fn split_str_to_vec(s: String, ch: char) -> Vec<String> {
+    s.split(ch).map(|v| v.to_string()).collect()
 }   

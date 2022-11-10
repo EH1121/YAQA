@@ -1,9 +1,15 @@
-use core::num;
-use std::collections::HashMap;
-use chrono;
-use rand::Rng;
+use {
+    core::num,
+    std::collections::HashMap,
+    chrono,
+    rand::Rng
+};
 
-use crate::helpers::{convert_to_integer, get_input_as_integer, split_str_to_vec};
+use crate::helpers::{
+    convert_to_integer, 
+    get_input_as_integer, 
+    split_str_to_vec
+};
 
 #[derive(Clone)]
 struct Quiz {
