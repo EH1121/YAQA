@@ -1,11 +1,12 @@
 use core::num;
 use std::collections::HashMap;
 use chrono;
-use crate::helpers::*;
+use rand::Rng;
 
-use rand::{self, Rng};
+use crate::helpers::{convert_to_integer, get_input_as_integer, split_str_to_vec};
+
 #[derive(Clone)]
-struct Quiz{
+struct Quiz {
     id: u64, // Starts from 0
     name: String, // example: "Rust lang", "Mathematics"
     description: String, // This is a description of a question ......
@@ -14,15 +15,14 @@ struct Quiz{
     asked: bool // to prevent duplicates
 }
 
-struct Quizzes{
+struct Quizzes {
     list: HashMap<u64, Quiz>, 
     correct: u64, // Number of questions answered correctly
 }
 
-impl Quizzes{
-    // Add quiz to list
-    fn add(&mut self, id: u64, name: String, description: String, answer: String, choices: Vec<String>){
-
+impl Quizzes {
+    /// Add quiz to list
+    fn add(&mut self, id: u64, name: String, description: String, answer: String, choices: Vec<String>) {
         let x = Quiz{
             id,
             name,
@@ -31,24 +31,21 @@ impl Quizzes{
             choices,
             asked: false
         };
-
         self.list.insert(id, x);
     }
 
-    // Returns a random, yet to be asked question
-    fn get_unasked_question(&self) -> Option<Quiz>{
-        let mut x: Vec<_> = self.list.iter().filter(|v| v.1.asked == true).map(|v| v.1.clone()).collect();
-        if x.len() > 0{
-
+    /// Returns a random, yet to be asked question
+    fn get_unasked_question(&self) -> Option<Quiz> {
+        let x: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1.clone()).collect();
+        if !x.is_empty() {
             let rng = rand::thread_rng().gen_range(0..x.len() - 1);
-
             return Some(x.get(rng).unwrap().clone());
         }
         None
     }
 
-    // Prints question, first the question's name, then the description (detail), then provide the multiple choices
-    fn print_pertanyaan(&self, quiz: &Quiz){
+    /// Prints question, first the question's name, then the description (detail), then provide the multiple choices
+    fn print_pertanyaan(&self, quiz: &Quiz) {
         println!("{}", quiz.name);
         println!("{}", quiz.description);
         for i in &quiz.choices{
@@ -56,19 +53,17 @@ impl Quizzes{
         }
     }
 
-    // Uses get_unasked_question to get random questions which it then outputs
-    // If an unasked question is found, it will mark it as an asked question
-    // Uses print_pertanyaan to output the question
-    fn ask(&mut self){
-
+    /// Uses get_unasked_question to get random questions which it then outputs
+    ///
+    /// If an unasked question is found, it will mark it as an asked question
+    /// 
+    /// Uses print_pertanyaan to output the question
+    fn ask(&mut self) {
         for i in 0..5{
-            let question = match self.get_unasked_question(){
+            let question = match self.get_unasked_question() {
                 Some(mut q) => {
-                    
                     q.asked = true;
-
                     self.list.insert(q.id, q.clone());
-
                     q
                 },
                 None => {
@@ -76,9 +71,7 @@ impl Quizzes{
                     return;
                 },
             };
-
             self.print_pertanyaan(&question);
-            
         }
     }
 }
