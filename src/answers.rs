@@ -1,7 +1,5 @@
-use std::char::ParseCharError;
-
-#[derive(Clone, PartialEq)]
-pub enum Choices{
+#[derive(Clone, PartialEq, Eq)]
+pub enum Choices {
     A,
     B,
     C,
@@ -10,9 +8,9 @@ pub enum Choices{
 
 
 /// Converts to choices enum
-pub fn to_choices_enum(s: &str) -> Result<Choices, ()>{
+pub fn to_choices_enum(s: &str) -> Result<Choices, ()> {
     let ss = &s.to_lowercase() as &str;
-    match ss{
+    match ss {
         "a" => Ok(Choices::A),
         "b" => Ok(Choices::B),
         "c" => Ok(Choices::C),
@@ -22,8 +20,8 @@ pub fn to_choices_enum(s: &str) -> Result<Choices, ()>{
 }
 
 /// Converts back to str
-pub fn from_choices_enum(s: Choices) -> String{
-    match s{
+pub fn from_choices_enum(s: Choices) -> String {
+    match s {
         Choices::A => "a".to_string(),
         Choices::B => "b".to_string(),
         Choices::C => "c".to_string(),

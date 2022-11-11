@@ -7,7 +7,7 @@ enum Command {
         topic: Option<String>
     },
     Leaderboards {
-        // FIXME: topic: data type
+        topic: String
     }
 }
 
@@ -25,7 +25,7 @@ impl Opt {
             Command::Play { topic } => {
 
             },
-            Command::Leaderboards {  } => {
+            Command::Leaderboards { topic } => {
                 
             }
         }

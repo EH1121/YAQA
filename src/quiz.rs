@@ -1,17 +1,21 @@
 use {
-    core::num,
     std::collections::HashMap,
-    chrono,
-    rand::Rng
+    rand::Rng,
+    std::num::ParseIntError
 };
 
-use std::num::ParseIntError;
-
-use crate::{helpers::{
-    convert_to_integer, 
-    get_input_as_integer, 
-    split_str_to_vec, get_char_input
-}, answers::{to_choices_enum, Choices}};
+use crate::{
+    helpers::{
+        convert_to_integer, 
+        get_input_as_integer, 
+        split_str_to_vec, 
+        get_char_input
+    }, 
+    answers::{
+        to_choices_enum, 
+        Choices
+    }
+};
 
 #[derive(Clone)]
 struct Quiz {
@@ -43,14 +47,12 @@ impl Quizzes {
     }
 
     /// Convert from String to each of the datatypes required to insert as Quiz
-    fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError>{
-
-        let f1 = u64::from_str_radix(id.trim(), 10)?;
+    fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
+        let f1 = id.trim().parse::<u64>()?; // u64::from_str_radix(id.trim(), 10)?;
         let f2 = name.trim();
         let f3 = description.trim();
         let f4 = to_choices_enum(answer).unwrap();
         let f5 = split_str_to_vec(choices, '|');
-
         self.add(f1, f2, f3, f4, f5);
         Ok(())
     }
@@ -58,7 +60,7 @@ impl Quizzes {
     // TODO: Cursed double clone, perhaps there is a way to prevent it?
     /// Returns a random, yet to be asked question
     fn get_unasked_question(&self) -> Option<Quiz> {
-        let x: Vec<&Quiz> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
+        let x: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
         if !x.is_empty() {
             let rng = rand::thread_rng().gen_range(0..x.len() - 1);
             return Some(x.get(rng).unwrap().clone().clone());
@@ -73,7 +75,7 @@ impl Quizzes {
         let mut curr_option: u8 = 65;
         for i in &quiz.choices{
             println!("{}. {}", curr_option as char, i);
-            curr_option = curr_option + 1;
+            curr_option += 1;
         }
     }
 
@@ -83,7 +85,7 @@ impl Quizzes {
     /// 
     /// Uses print_pertanyaan to output the question
     fn ask(&mut self) {
-        for i in 0..5{
+        for i in 0..5 {
             let mut question = match self.get_unasked_question() {
                 Some(q) => q,
                 None => {
@@ -94,7 +96,7 @@ impl Quizzes {
             self.print_pertanyaan(&question, i + 1);
             let answered = get_char_input("Input ['A' | 'B' | 'C' | 'D']: ", 'A', 'D');
             if to_choices_enum(&answered.to_string()).unwrap() == question.answer{
-                self.correct = self.correct + 1;
+                self.correct += 1;
                 question.asked = true;
                 self.list.insert(question.id, question);
             }
