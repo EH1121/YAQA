@@ -31,18 +31,16 @@ pub struct Quizzes {
     name: String,
     list: HashMap<u64, Quiz>, 
     correct: u64, // Number of questions answered correctly
-    filename: String
 }
 
 impl Quizzes {
 
-    pub fn new(topic_id: u64, name: String, filename: String) -> Self{
+    pub fn new(topic_id: u64, name: String) -> Self{
         Self{
             topic_id,
             name,
             list: HashMap::new(),
             correct: 0,
-            filename
         }
     }
 
