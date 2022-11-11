@@ -1,1 +1,10 @@
-id,topic_id,name,score
+player_id,topic_id,name,score,duration
+0,0,John Doe,5,25
+0,1,John Doe,3,5
+0,2,John Doe,4,3
+1,0,Jane Doe,4,6
+1,1,Jane Doe,5,8
+1,2,Jane Doe,3,5
+2,0,Joe Borg,1,2
+2,1,Joe Borg,4,50
+2,2,Joe Borg,5,52
