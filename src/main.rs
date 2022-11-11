@@ -3,7 +3,7 @@ use structopt::StructOpt;
 mod opt;
 mod quiz;
 mod helpers;
-
+mod answers;
 fn main() {
     let args = opt::Opt::from_args();
     // if let Err(e) =  {
