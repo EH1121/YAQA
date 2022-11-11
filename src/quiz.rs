@@ -7,7 +7,8 @@ use {
 use crate::{
     helpers::{
         split_str_to_vec, 
-        get_char_input
+        get_char_input,
+        convert_to_integer
     }, 
     answers::{
         to_choices_enum, 
@@ -34,8 +35,7 @@ pub struct Quizzes {
 }
 
 impl Quizzes {
-
-    pub fn new(topic_id: u64, name: String) -> Self{
+    pub fn new(topic_id: u64, name: String) -> Self {
         Self{
             topic_id,
             name,
@@ -46,7 +46,7 @@ impl Quizzes {
 
     /// Add quiz to list
     pub fn add(&mut self, id: u64, name: &str, description: &str, answer: Choices, choices: Vec<String>) {
-        let x = Quiz{
+        let x = Quiz {
             id,
             name: name.to_string(),
             description: description.to_string(),
@@ -59,7 +59,7 @@ impl Quizzes {
 
     /// Convert from String to each of the datatypes required to insert as Quiz
     pub fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
-        let f1 = u64::from_str_radix(id.trim(), 10)?; // get_input_as_integer(id); 
+        let f1 = convert_to_integer(id)?; // get_input_as_integer(id); 
         let f2 = name.trim();
         let f3 = description.trim();
         let f4 = to_choices_enum(answer).unwrap();

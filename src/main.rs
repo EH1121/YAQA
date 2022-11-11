@@ -1,18 +1,18 @@
-use quiz::Quizzes;
 use structopt::StructOpt;
 
-mod files;
 mod opt;
-mod quiz;
-mod helpers;
-mod answers;
+
 mod leaderboards;
+mod answers;
+mod quiz;
 mod topics_csv;
+
+mod files;
+mod helpers;
 
 fn main() {
     let args = opt::Opt::from_args();
-    // if let Err(e) =  {
-    //     println!("Failed to start: {}", e);
-    // }
-    opt::Opt::run(args)
+    if let Err(e) = opt::Opt::run(args) {
+        println!("Failed to start: {}", e);
+    }
 }

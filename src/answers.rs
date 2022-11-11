@@ -6,7 +6,6 @@ pub enum Choices {
     D
 }
 
-
 /// Converts to choices enum
 pub fn to_choices_enum(s: &str) -> Result<Choices, ()> {
     let ss = &s.to_lowercase() as &str;

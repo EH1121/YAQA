@@ -1,4 +1,4 @@
 topic_id,leaderboard_name,file_name,topic_name,topic_description
 0,geography,geography.csv,geography,geography,Guess the locations of popular landmarks
 1,mathematics,mathematics.csv,mathematics,mathematics,Can you solve the questions?
-2,rustlang,rslang.csv,rustlang,rustlang,Can you answer rust related questions correctly?
+2,rustlang,rustlang.csv,rustlang,rustlang,Can you answer rust related questions correctly?
