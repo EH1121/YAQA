@@ -6,7 +6,6 @@ use {
 
 use crate::{
     helpers::{
-        convert_to_integer, 
         get_input_as_integer, 
         split_str_to_vec, 
         get_char_input
@@ -27,14 +26,27 @@ struct Quiz {
     asked: bool // to prevent duplicates
 }
 
-struct Quizzes {
+#[derive(Clone)]
+pub struct Quizzes {
+    topic_id: u64,
+    name: String,
     list: HashMap<u64, Quiz>, 
     correct: u64, // Number of questions answered correctly
 }
 
 impl Quizzes {
+
+    pub fn new(topic_id: u64, name: String) -> Self{
+        Self{
+            topic_id,
+            name,
+            list: HashMap::new(),
+            correct: 0,
+        }
+    }
+
     /// Add quiz to list
-    fn add(&mut self, id: u64, name: &str, description: &str, answer: Choices, choices: Vec<String>) {
+    pub fn add(&mut self, id: u64, name: &str, description: &str, answer: Choices, choices: Vec<String>) {
         let x = Quiz{
             id,
             name: name.to_string(),
@@ -47,7 +59,7 @@ impl Quizzes {
     }
 
     /// Convert from String to each of the datatypes required to insert as Quiz
-    fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
+    pub fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
         let f1 = get_input_as_integer(id); // u64::from_str_radix(id.trim(), 10)?;
         let f2 = name.trim();
         let f3 = description.trim();
@@ -59,7 +71,7 @@ impl Quizzes {
 
     // TODO: Cursed double clone, perhaps there is a way to prevent it?
     /// Returns a random, yet to be asked question
-    fn get_unasked_question(&self) -> Option<Quiz> {
+    pub fn get_unasked_question(&self) -> Option<Quiz> {
         let x: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
         if !x.is_empty() {
             let rng = rand::thread_rng().gen_range(0..x.len() - 1);
@@ -69,7 +81,7 @@ impl Quizzes {
     }
 
     /// Prints question, first the question's name, then the description (detail), then provide the multiple choices
-    fn print_pertanyaan(&self, quiz: &Quiz, quiz_number: usize) {
+    pub fn print_pertanyaan(&self, quiz: &Quiz, quiz_number: usize) {
         println!("{}", quiz.name);
         println!("{}. {}", quiz_number, quiz.description);
         let mut curr_option: u8 = 65;
@@ -84,7 +96,7 @@ impl Quizzes {
     /// If an unasked question is found, it will mark it as an asked question
     /// 
     /// Uses print_pertanyaan to output the question
-    fn ask(&mut self) {
+    pub fn ask(&mut self) {
         for i in 0..5 {
             let mut question = match self.get_unasked_question() {
                 Some(q) => q,
