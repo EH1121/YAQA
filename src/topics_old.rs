@@ -19,8 +19,8 @@ impl Topics{
     }
 
     /// 
-    pub fn add_new_topic(&mut self, topic_id: u64, topic_name: &str) {
-        let x = Quizzes::new(topic_id, topic_name.to_string());
+    pub fn add_new_topic(&mut self, topic_id: u64, topic_name: &str, filename: &str) {
+        let x = Quizzes::new(topic_id, topic_name.to_string(), filename.to_string());
         self.list.insert(topic_id, x);
     }
 
@@ -53,6 +53,7 @@ impl Topics{
         if is_random{
             let mut rng = rand::thread_rng();
             t_id = rng.gen_range(0..self.list.len()) as u64;
+            // let x = t_id = self.list.keys();
             // t_id = 
         }
         Some(self.list.get(&t_id).unwrap().clone())

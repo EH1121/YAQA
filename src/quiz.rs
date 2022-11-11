@@ -6,7 +6,6 @@ use {
 
 use crate::{
     helpers::{
-        get_input_as_integer, 
         split_str_to_vec, 
         get_char_input
     }, 
@@ -32,16 +31,18 @@ pub struct Quizzes {
     name: String,
     list: HashMap<u64, Quiz>, 
     correct: u64, // Number of questions answered correctly
+    filename: String
 }
 
 impl Quizzes {
 
-    pub fn new(topic_id: u64, name: String) -> Self{
+    pub fn new(topic_id: u64, name: String, filename: String) -> Self{
         Self{
             topic_id,
             name,
             list: HashMap::new(),
             correct: 0,
+            filename
         }
     }
 
@@ -60,7 +61,7 @@ impl Quizzes {
 
     /// Convert from String to each of the datatypes required to insert as Quiz
     pub fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
-        let f1 = get_input_as_integer(id); // u64::from_str_radix(id.trim(), 10)?;
+        let f1 = u64::from_str_radix(id.trim(), 10)?; // get_input_as_integer(id); 
         let f2 = name.trim();
         let f3 = description.trim();
         let f4 = to_choices_enum(answer).unwrap();
@@ -74,7 +75,7 @@ impl Quizzes {
     pub fn get_unasked_question(&self) -> Option<Quiz> {
         let x: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
         if !x.is_empty() {
-            let rng = rand::thread_rng().gen_range(0..x.len() - 1);
+            let rng = rand::thread_rng().gen_range(0..x.len());
             return Some(x.get(rng).unwrap().clone().clone());
         }
         None
