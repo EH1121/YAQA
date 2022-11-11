@@ -5,8 +5,8 @@ use std::{
 };
 
 /// Converts string to integer, otherwise error
-pub fn convert_to_integer(to_parse: &str) -> Result<i64, ParseIntError> {
-    let integer = to_parse.parse::<i64>()?;
+pub fn convert_to_integer(to_parse: &str) -> Result<u64, ParseIntError> {
+    let integer = to_parse.parse::<u64>()?;
     Ok(integer)
 }
 
@@ -17,7 +17,7 @@ pub fn print(to_print: &str){
 }
 
 /// Helper input function
-pub fn get_input_as_integer(line: &str) -> i64 {
+pub fn get_input_as_integer(line: &str) -> u64 {
     loop {
         let mut input = String::new();
         print(line);

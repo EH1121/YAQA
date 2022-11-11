@@ -48,7 +48,7 @@ impl Quizzes {
 
     /// Convert from String to each of the datatypes required to insert as Quiz
     fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
-        let f1 = id.trim().parse::<u64>()?; // u64::from_str_radix(id.trim(), 10)?;
+        let f1 = get_input_as_integer(id); // u64::from_str_radix(id.trim(), 10)?;
         let f2 = name.trim();
         let f3 = description.trim();
         let f4 = to_choices_enum(answer).unwrap();
