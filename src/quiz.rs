@@ -1,14 +1,11 @@
 use {
     std::collections::HashMap,
     rand::Rng,
-    std::num::ParseIntError
 };
 
 use crate::{
     helpers::{
-        split_str_to_vec, 
         get_char_input,
-        convert_to_integer
     }, 
     answers::{
         to_choices_enum, 
@@ -29,8 +26,8 @@ struct Quiz {
 #[derive(Clone)]
 pub struct Quizzes {
     list: HashMap<u64, Quiz>, 
-    correct: u64, // Number of questions answered correctly
-    questions_asked: u64 // Number of questions that has been asked
+    pub correct: u64, // Number of questions answered correctly
+    pub questions_asked: u64 // Number of questions that has been asked
 }
 
 impl Quizzes {

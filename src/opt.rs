@@ -1,9 +1,14 @@
 use std::time::Instant;
 
-use chrono::Local;
+use chrono::{Local, Duration};
 use structopt::StructOpt;
 
-use crate::files::{self, load_topics, load_quizzes};
+use crate::files::{
+    load_topics, 
+    load_quizzes, 
+    load_leaderboards
+};
+
 use crate::leaderboards;
 
 #[derive(StructOpt)]
@@ -34,8 +39,8 @@ impl Opt {
             /// Topic is optional
             Command::Play { topic } => {
                 // Should topic be left empty, then randomize topic
-                let topics = files::load_topics(option.verbose)?;
-                let mut leaderboards = files::load_leaderboards(option.verbose)?;
+                let topics = load_topics(option.verbose)?;
+                let mut leaderboards = load_leaderboards(option.verbose)?;
 
                 let top = match topics.get_topic(&topic){
                     Some(e) => e,
@@ -48,20 +53,26 @@ impl Opt {
 
                 let mut y = load_quizzes(top, option.verbose)?;
                 
-                let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
-                println!("{chrono_datetime}");
-                let curr_time = Instant::now();
-                y.ask();
-                let curr_time = Instant::now().duration_since(curr_time);
+                // let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
 
+                y.ask();
+
+                // let z = chrono_datetime
+
+                // let chrono_datetime_since = Local::now().format("%Y-%m-%d %H-%M-%S");
+
+                // let duration = chrono_datetime - chrono_datetime_since;
+
+                
                 // Leaderboards update?
+                let score: f64 = (y.correct as f64 / y.questions_asked as f64) * 100.0;
 
 
 
                 Ok(())
             },
             Command::Leaderboards { topic } => {
-                let mut leaderboards = files::load_leaderboards(option.verbose)?;
+                let mut leaderboards = load_leaderboards(option.verbose)?;
                 match leaderboards.get_leaderboards_by_name(&topic){
                     Some(t) => {
                         for i in t{
@@ -73,7 +84,7 @@ impl Opt {
                 Ok(())
             },
             Command::List{} => {
-                let topics = files::load_topics(option.verbose)?;
+                let topics = load_topics(option.verbose)?;
                 // Lists all topics
                 topics.print_all_topics();
                 Ok(())
