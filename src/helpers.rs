@@ -41,7 +41,7 @@ pub fn get_input_as_integer(line: &str) -> u64 {
     }
 }
 
-
+/// Converts string to local datetime
 pub fn convert_to_local_datetime(datetime: &str) -> Result<DateTime<Local>, String>{
 
     match datetime.parse::<NaiveDateTime>(){

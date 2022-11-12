@@ -92,9 +92,9 @@ impl Quizzes {
             let answered = get_char_input("Input ['A' | 'B' | 'C' | 'D']: ", 'A', 'D');
             if to_choices_enum(&answered.to_string()).unwrap() == question.answer{
                 self.correct += 1;
-                question.asked = true;
-                self.list.insert(question.id, question);
             }
+            question.asked = true;
+            self.list.insert(question.id, question);
             self.questions_asked += 1
         }
     }
