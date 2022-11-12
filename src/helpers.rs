@@ -1,5 +1,5 @@
 use std::{
-    num::ParseIntError, 
+    num::{ParseIntError, ParseFloatError}, 
     char::ParseCharError,
     io::Write
 };
@@ -8,6 +8,12 @@ use std::{
 pub fn convert_to_integer(to_parse: &str) -> Result<u64, ParseIntError> {
     let integer = to_parse.parse::<u64>()?;
     Ok(integer)
+}
+
+/// Converts string to float, otherwise error
+pub fn convert_to_float(to_parse: &str) -> Result<f64, ParseFloatError> {
+    let f = to_parse.parse::<f64>()?;
+    Ok(f)
 }
 
 /// For input purposes, immediately flush to console

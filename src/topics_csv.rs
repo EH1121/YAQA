@@ -45,7 +45,7 @@ impl Topics {
         match topic_name{
             Some(t) => {
                 let low_case_topic_name = t.to_lowercase();
-                for (k, v) in &self.list{
+                for (_, v) in &self.list{
                     if v.topic_name == low_case_topic_name{
                         return Some(v.clone());
                     }

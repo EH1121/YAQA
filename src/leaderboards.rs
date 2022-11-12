@@ -2,7 +2,7 @@
 pub struct Leaderboard {
     topic_name: String,
     player_name: String,
-    score: u64,
+    score: f64,
     // start_time: String,
     // end_time: String,
     duration: u64
@@ -26,7 +26,7 @@ impl Leaderboards {
         }
     }
 
-    pub fn add_new_leaderboards(&mut self, topic_name: &str, player_name: &str, score: u64, duration: u64) {
+    pub fn add_new_leaderboards(&mut self, topic_name: &str, player_name: &str, score: f64, duration: u64) {
         self.list.push(Leaderboard{
             topic_name: topic_name.to_string(), 
             player_name: player_name.to_string(), 
@@ -39,7 +39,7 @@ impl Leaderboards {
         let mut x: Vec<&Leaderboard> = self.list.iter().filter(|v| v.topic_name == topic_name.to_lowercase()).collect();
         
         if !x.is_empty(){
-            x.sort_by(|a, b| b.score.cmp(&a.score));
+            x.sort_by(|a, b| b.score.total_cmp(&a.score));
             return Some(x);
         }
         None

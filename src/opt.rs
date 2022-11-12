@@ -54,7 +54,9 @@ impl Opt {
                 y.ask();
                 let curr_time = Instant::now().duration_since(curr_time);
 
+                
                 // Leaderboards update?
+                let score: f64 = (y.correct as f64 / y.questions_asked as f64) * 100.0;
 
 
 

@@ -7,7 +7,7 @@ use std::{
 use crate::{
     topics_csv::{self, Topic}, 
     leaderboards, 
-    helpers::{self, convert_to_char, split_str_to_vec},
+    helpers::{self, split_str_to_vec},
     quiz::Quizzes, 
     answers::{Choices, to_choices_enum}
 };
@@ -139,7 +139,7 @@ pub fn load_quizzes(topic: Topic, verbose: bool) -> std::io::Result<Quizzes> { /
 
 // Leaderboards: Read and Write
 /// Parses leaderboard with format: topic_name, player_name, score, duration
-pub fn parse_leaderboard(string: &str) -> Result<(String, String, u64, u64), String> {
+pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, u64), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
 
     let topic_name = match strings.first().filter(|str| !str.is_empty()) {
@@ -153,7 +153,7 @@ pub fn parse_leaderboard(string: &str) -> Result<(String, String, u64, u64), Str
     };
 
     let score = match strings.get(2) {
-        Some(str) => match helpers::convert_to_integer(str) {
+        Some(str) => match helpers::convert_to_float(str) {
             Ok(v) => v,
             Err(_) => return Err("ParseIntError".to_string())
         },
