@@ -35,10 +35,10 @@ impl Opt {
                 let topics = files::load_topics(option.verbose)?;
                 let mut leaderboards = files::load_leaderboards(option.verbose)?;
 
-                if topic == None{
-
-                }
-
+                let top = match topic{
+                    Some(_) => topics.get_topic_by_name(&topic.unwrap()),
+                    None => topics.get_topic(0, true),
+                };
 
                 Ok(())
             },
