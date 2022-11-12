@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use chrono::Local;
+use chrono::{Local, Duration};
 use structopt::StructOpt;
 
 use crate::files::{
@@ -53,11 +53,15 @@ impl Opt {
 
                 let mut y = load_quizzes(top, option.verbose)?;
                 
-                let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
-                println!("{chrono_datetime}");
-                let curr_time = Instant::now();
+                // let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
+
                 y.ask();
-                let curr_time = Instant::now().duration_since(curr_time);
+
+                // let z = chrono_datetime
+
+                // let chrono_datetime_since = Local::now().format("%Y-%m-%d %H-%M-%S");
+
+                // let duration = chrono_datetime - chrono_datetime_since;
 
                 
                 // Leaderboards update?

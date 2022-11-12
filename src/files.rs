@@ -4,6 +4,8 @@ use std::{
     io::Read
 };
 
+use chrono::{Local, DateTime};
+
 use crate::{
     topics_csv::{self, Topic}, 
     leaderboards, 
@@ -139,7 +141,7 @@ pub fn load_quizzes(topic: Topic, verbose: bool) -> std::io::Result<Quizzes> { /
 
 // Leaderboards: Read and Write
 /// Parses leaderboard with format: topic_name, player_name, score, duration
-pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, u64), String> {
+pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, DateTime<Local>, DateTime<Local>, u64), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
 
     let topic_name = match strings.first().filter(|str| !str.is_empty()) {
@@ -160,14 +162,30 @@ pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, u64), Str
         None => return Err("Missing topic_id".to_string())
     };
 
-    let duration = match strings.get(3) {
+    let start_time = match strings.get(3) {
+        Some(str) => match helpers::convert_to_local_datetime(str) {
+            Ok(v) => v,
+            Err(_) => return Err("ParseIntError".to_string())
+        },
+        None => return Err("Missing topic_id".to_string())
+    };
+
+    let end_time = match strings.get(4) {
+        Some(str) => match helpers::convert_to_local_datetime(str) {
+            Ok(v) => v,
+            Err(_) => return Err("ParseIntError".to_string())
+        },
+        None => return Err("Missing topic_id".to_string())
+    };
+
+    let duration = match strings.get(5) {
         Some(str) => match helpers::convert_to_integer(str) {
             Ok(v) => v,
             Err(_) => return Err("ParseIntError".to_string())
         },
         None => return Err("Missing topic_id".to_string())
     };
-    Ok(( topic_name, player_name, score, duration ))
+    Ok(( topic_name, player_name, score, start_time, end_time, duration ))
 }
 
 /// Parses input from string and adds it to leaderboards
@@ -176,7 +194,7 @@ fn parse_leaderboards(leaderboards: String, verbose: bool) -> leaderboards::Lead
     for (i, leaderboard) in leaderboards.split('\n').enumerate() {
         if !leaderboard.is_empty() {
             match parse_leaderboard(leaderboard) {
-                Ok(ldb) => ldbs.add_new_leaderboards(&ldb.0, &ldb.1, ldb.2, ldb.3),
+                Ok(ldb) => ldbs.add_new_leaderboards(&ldb.0, &ldb.1, ldb.2.clone(), ldb.3.clone(), ldb.4, ldb.5),
                 Err(err) => if verbose { println!("Error in parsing lines in leaderboards.csv on line {}: {err}", i+1) }
             }
         }

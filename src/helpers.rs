@@ -4,6 +4,8 @@ use std::{
     io::Write
 };
 
+use chrono::{Local, TimeZone, NaiveDateTime, DateTime};
+
 /// Converts string to integer, otherwise error
 pub fn convert_to_integer(to_parse: &str) -> Result<u64, ParseIntError> {
     let integer = to_parse.parse::<u64>()?;
@@ -37,6 +39,17 @@ pub fn get_input_as_integer(line: &str) -> u64 {
             Err(_) => println!("Invalid Input, Please try again")
         }
     }
+}
+
+
+pub fn convert_to_local_datetime(datetime: &str) -> Result<DateTime<Local>, String>{
+
+    match datetime.parse::<NaiveDateTime>(){
+        Ok(x) => {
+            return Ok(Local.from_local_datetime(&x).unwrap());
+        },
+        Err(_) => return Err("Failed to convert datetime to local".to_string()),
+    };
 }
 
 /// Splits input string by char, which is then put into a vector of string
