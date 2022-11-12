@@ -1,6 +1,7 @@
 use structopt::StructOpt;
 
-use crate::files;
+use crate::files::{self, load_topics};
+use crate::leaderboards;
 
 #[derive(StructOpt)]
 enum Command {
@@ -10,7 +11,8 @@ enum Command {
     },
     Leaderboards {
         topic: String
-    }
+    },
+    List,
 }
 
 #[derive(StructOpt)]
@@ -28,11 +30,36 @@ impl Opt {
             // TODO: P;ay Game and Use Data
             /// Topic is optional
             Command::Play { topic } => {
-                // let topics = files::load_topics(option.verbose)?;
-                // let leaderboards = files::load_leaderboards(option.verbose)?;
+
+                // Should topic be left empty, then randomize topic
+                let topics = files::load_topics(option.verbose)?;
+                let mut leaderboards = files::load_leaderboards(option.verbose)?;
+
+                if topic == None{
+
+                }
+
+
                 Ok(())
             },
             Command::Leaderboards { topic } => {
+                let mut leaderboards = files::load_leaderboards(option.verbose)?;
+                match leaderboards.get_leaderboards_by_name(&topic){
+                    Some(t) => {
+                        for i in t{
+                            i.print();
+                        }
+                    },
+                    None => println!("No leaderboards for {topic} found"),
+                }
+                Ok(())
+            },
+            Command::List{} => {
+                let topics = files::load_topics(option.verbose)?;
+                // Lists all topics
+
+                topics.print_all_topics();
+
                 Ok(())
             }
         }

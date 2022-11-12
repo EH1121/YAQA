@@ -1,5 +1,5 @@
 #[derive(Debug)]
-struct Leaderboard {
+pub struct Leaderboard {
     topic_name: String,
     player_name: String,
     score: u64,
@@ -12,6 +12,13 @@ struct Leaderboard {
 pub struct Leaderboards {
     list: Vec<Leaderboard>
 }
+
+impl Leaderboard{
+    pub fn print(&self){
+        
+    }
+}
+
 
 impl Leaderboards {
     pub fn new() -> Self {
@@ -28,4 +35,15 @@ impl Leaderboards {
             duration 
         })
     }
+
+    pub fn get_leaderboards_by_name(&mut self, topic_name: &str) -> Option<Vec<&Leaderboard>>{
+        let mut x: Vec<&Leaderboard> = self.list.iter().filter(|v| v.topic_name == topic_name.to_lowercase()).collect();
+        
+        if !x.is_empty(){
+            x.sort_by(|a, b| b.score.cmp(&a.score));
+            return Some(x);
+        }
+        None
+    }
+
 }
