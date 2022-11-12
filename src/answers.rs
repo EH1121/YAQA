@@ -7,14 +7,14 @@ pub enum Choices {
 }
 
 /// Converts to choices enum
-pub fn to_choices_enum(s: &str) -> Result<Choices, ()> {
+pub fn to_choices_enum(s: &str) -> Result<Choices, String> {
     let ss = &s.to_lowercase() as &str;
-    match ss {
+    match ss.trim() {
         "a" => Ok(Choices::A),
         "b" => Ok(Choices::B),
         "c" => Ok(Choices::C),
         "d" => Ok(Choices::D),
-        _ => Err(())
+        _ => Err("Conversion to choices enum failed".to_string())
     }
 }
 

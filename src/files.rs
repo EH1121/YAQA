@@ -5,12 +5,15 @@ use std::{
 };
 
 use crate::{
-    topics_csv, 
+    topics_csv::{self, Topic}, 
     leaderboards, 
-    helpers
+    helpers::{self, convert_to_char, split_str_to_vec},
+    quiz::Quizzes, 
+    answers::{Choices, to_choices_enum}
 };
 
-// Quiz: Read from file - DONE
+// Topics: Read from file - DONE
+/// Parses input from string and adds it to Topics
 fn parse_topic(string: &str) -> Result<(u64, String, String, String, String), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
 
@@ -45,6 +48,8 @@ fn parse_topic(string: &str) -> Result<(u64, String, String, String, String), St
     Ok(( topic_id, leaderboard_name, file_name, topic_name, topic_description ))
 }
 
+
+/// Parses input from string and adds it to Topics
 fn parse_topics(topics: String, verbose: bool) -> topics_csv::Topics {
     let mut tpcs = topics_csv::Topics::new();
     for topic in topics.split('\n') {
@@ -58,6 +63,7 @@ fn parse_topics(topics: String, verbose: bool) -> topics_csv::Topics {
     tpcs
 }
 
+/// Reads "topics.csv", which will then be parsed by each line and returns Topics which contains all the topics
 pub fn load_topics(verbose: bool) -> std::io::Result<topics_csv::Topics> {
     let path = PathBuf::from("src/data/topics.csv");
     let mut file = File::open(path)?;
@@ -66,7 +72,76 @@ pub fn load_topics(verbose: bool) -> std::io::Result<topics_csv::Topics> {
     Ok(parse_topics(buffer, verbose))
 }
 
+// Quiz: Read from file - DONE
+/// Parses input from string and adds it to Topics
+fn parse_quiz(string: &str) -> Result<(u64, String, String, Choices, Vec<String>), String> {
+    let strings: Vec<&str> = string.trim_end().split(',').collect();
+
+    let quiz_id = match strings.first() {
+        Some(str) => match helpers::convert_to_integer(str) {
+            Ok(v) => v,
+            Err(_) => return Err("ParseIntError".to_string())
+        },
+        None => return Err("Missing topic_id".to_string())
+    };
+
+    let quiz_name = match strings.get(1).filter(|str| !str.is_empty()) {
+        Some(str) => str.to_string(),
+        None => return Err("Missing leaderboard_name".to_string())
+    };
+
+    let quiz_description = match strings.get(2).filter(|str| !str.is_empty()) {
+        Some(str) => str.to_string(),
+        None => return Err("Missing file_name".to_string())
+    };
+
+    let quiz_answer = match strings.get(3).filter(|str| !str.is_empty()) {
+        Some(str) => {
+            match to_choices_enum(str){
+                Ok(e) => e,
+                Err(_) => return Err("Error parsing answer".to_string())
+            }
+        },
+        None => return Err("Missing topic_name".to_string())
+    };
+
+    let quiz_choices = match strings.get(4).filter(|str| !str.is_empty()) {
+        Some(str) => split_str_to_vec(str, '|'),
+        None => return Err("Missing topic_description".to_string())
+    };
+
+    Ok(( quiz_id, quiz_name, quiz_description, quiz_answer, quiz_choices))
+}
+
+pub fn parse_quizzes(quizzes: String, verbose: bool) -> Quizzes { //-> Quizzes{
+    let mut qz = Quizzes::new();
+    for q in quizzes.split('\n') {
+        if !q.is_empty() {
+            match parse_quiz(q) {
+                Ok(quiz) => qz.add(quiz.0, &quiz.1, &quiz.2, quiz.3, quiz.4),
+                Err(err) => if verbose { println!("Error in parsing lines in topics.csv: {err}") }
+            }
+        }
+    }
+    qz
+}
+
+
+pub fn load_quizzes(topic: Topic, verbose: bool) -> std::io::Result<Quizzes> { //-> Quizzes{
+    // topic_id: u64,
+    // leaderboard_name: String,
+    // file_name: String,
+    // topic_name: String,
+    // topic_description: String
+    let path = PathBuf::from("src/data/questions/".to_owned() + &topic.file_name);
+    let mut file = File::open(path)?;
+    let mut buffer = String::new();
+    file.read_to_string(&mut buffer)?;
+    Ok(parse_quizzes(buffer, verbose))
+}
+
 // Leaderboards: Read and Write
+/// Parses leaderboard with format: topic_name, player_name, score, duration
 pub fn parse_leaderboard(string: &str) -> Result<(String, String, u64, u64), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
 
@@ -99,6 +174,7 @@ pub fn parse_leaderboard(string: &str) -> Result<(String, String, u64, u64), Str
     Ok(( topic_name, player_name, score, duration ))
 }
 
+/// Parses input from string and adds it to leaderboards
 fn parse_leaderboards(leaderboards: String, verbose: bool) -> leaderboards::Leaderboards {
     let mut ldbs = leaderboards::Leaderboards::new();
     for leaderboard in leaderboards.split('\n') {
@@ -112,6 +188,7 @@ fn parse_leaderboards(leaderboards: String, verbose: bool) -> leaderboards::Lead
     ldbs
 }
 
+/// Reads "leaderboards.csv", which will then be parsed by each line and returns leaderboards which contains all the players
 pub fn load_leaderboards(verbose: bool) -> std::io::Result<leaderboards::Leaderboards> {
     let path = PathBuf::from("src/data/leaderboards.csv");
     let mut file = File::open(path)?;
