@@ -30,16 +30,13 @@ impl Opt {
             // TODO: P;ay Game and Use Data
             /// Topic is optional
             Command::Play { topic } => {
-
                 // Should topic be left empty, then randomize topic
                 let topics = files::load_topics(option.verbose)?;
                 let mut leaderboards = files::load_leaderboards(option.verbose)?;
-
                 let top = match topic{
                     Some(_) => topics.get_topic_by_name(&topic.unwrap()),
                     None => topics.get_topic(0, true),
                 };
-
                 Ok(())
             },
             Command::Leaderboards { topic } => {
@@ -57,9 +54,7 @@ impl Opt {
             Command::List{} => {
                 let topics = files::load_topics(option.verbose)?;
                 // Lists all topics
-
                 topics.print_all_topics();
-
                 Ok(())
             }
         }

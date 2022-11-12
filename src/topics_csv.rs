@@ -42,7 +42,6 @@ impl Topics {
             return None;
         }
         let mut t_id = topic_id;
-
         if is_random {
             let mut rng = rand::thread_rng();
             t_id = rng.gen_range(0..self.list.len()) as u64;
@@ -51,7 +50,6 @@ impl Topics {
 
             t_id = keys.get(t_id as usize).unwrap().clone().clone();
         }
-
         if self.list.contains_key(&t_id){
             Some(self.list.get(&t_id).unwrap().clone());
         }
@@ -80,7 +78,7 @@ impl Topics {
         let mut x = 1;
         for i in &self.list {
             println!("{}. {} | {}", x, i.1.topic_name, i.1.topic_description);
-            x = x + 1;
+            x += 1;
         }
     }
 }

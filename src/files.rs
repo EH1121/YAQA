@@ -44,7 +44,6 @@ fn parse_topic(string: &str) -> Result<(u64, String, String, String, String), St
         Some(str) => str.to_string(),
         None => return Err("Missing topic_description".to_string())
     };
-
     Ok(( topic_id, leaderboard_name, file_name, topic_name, topic_description ))
 }
 
@@ -52,15 +51,13 @@ fn parse_topic(string: &str) -> Result<(u64, String, String, String, String), St
 /// Parses input from string and adds it to Topics
 fn parse_topics(topics: String, verbose: bool) -> topics_csv::Topics {
     let mut tpcs = topics_csv::Topics::new();
-    let mut curr_line = 1;
-    for topic in topics.split('\n') {
+    for (i, topic) in topics.split('\n').enumerate() {
         if !topic.is_empty() {
             match parse_topic(topic) {
                 Ok(tpc) => tpcs.add_new_topic(tpc.0, &tpc.1, &tpc.2, &tpc.3, &tpc.4),
-                Err(err) => if verbose { println!("Error in parsing lines in topics.csv on line {curr_line}: {err}") }
+                Err(err) => if verbose { println!("Error in parsing lines in topics.csv on line {}: {err}", i+1) }
             }
         }
-        curr_line = curr_line + 1;
     }
     tpcs
 }
@@ -111,25 +108,21 @@ fn parse_quiz(string: &str) -> Result<(u64, String, String, Choices, Vec<String>
         Some(str) => split_str_to_vec(str, '|'),
         None => return Err("Missing quiz choices".to_string())
     };
-
     Ok(( quiz_id, quiz_name, quiz_description, quiz_answer, quiz_choices))
 }
 
 pub fn parse_quizzes(quizzes: String, filename: &str, verbose: bool) -> Quizzes { //-> Quizzes{
     let mut qz = Quizzes::new();
-    let mut curr_line = 1;
-    for q in quizzes.split('\n') {
+    for (i, q) in quizzes.split('\n').enumerate() {
         if !q.is_empty() {
             match parse_quiz(q) {
                 Ok(quiz) => qz.add(quiz.0, &quiz.1, &quiz.2, quiz.3, quiz.4),
-                Err(err) => if verbose { println!("Error in parsing lines in {filename} on line {curr_line}: {err}",) }
+                Err(err) => if verbose { println!("Error in parsing lines in {filename} on line {}: {err}", i+1) }
             }
         }
-        curr_line = curr_line + 1;
     }
     qz
 }
-
 
 pub fn load_quizzes(topic: Topic, verbose: bool) -> std::io::Result<Quizzes> { //-> Quizzes{
     // topic_id: u64,
@@ -174,22 +167,19 @@ pub fn parse_leaderboard(string: &str) -> Result<(String, String, u64, u64), Str
         },
         None => return Err("Missing topic_id".to_string())
     };
-
     Ok(( topic_name, player_name, score, duration ))
 }
 
 /// Parses input from string and adds it to leaderboards
 fn parse_leaderboards(leaderboards: String, verbose: bool) -> leaderboards::Leaderboards {
     let mut ldbs = leaderboards::Leaderboards::new();
-    let mut curr_line = 1;
-    for leaderboard in leaderboards.split('\n') {
+    for (i, leaderboard) in leaderboards.split('\n').enumerate() {
         if !leaderboard.is_empty() {
             match parse_leaderboard(leaderboard) {
                 Ok(ldb) => ldbs.add_new_leaderboards(&ldb.0, &ldb.1, ldb.2, ldb.3),
-                Err(err) => if verbose { println!("Error in parsing lines in leaderboards.csv on line {curr_line}: {err}") }
+                Err(err) => if verbose { println!("Error in parsing lines in leaderboards.csv on line {}: {err}", i+1) }
             }
         }
-        curr_line = curr_line + 1
     }
     ldbs
 }

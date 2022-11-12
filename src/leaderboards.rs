@@ -19,7 +19,6 @@ impl Leaderboard{
     }
 }
 
-
 impl Leaderboards {
     pub fn new() -> Self {
         Self{
