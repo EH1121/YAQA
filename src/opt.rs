@@ -3,7 +3,12 @@ use std::time::Instant;
 use chrono::Local;
 use structopt::StructOpt;
 
-use crate::files::{self, load_topics, load_quizzes};
+use crate::files::{
+    load_topics, 
+    load_quizzes, 
+    load_leaderboards
+};
+
 use crate::leaderboards;
 
 #[derive(StructOpt)]
@@ -34,8 +39,8 @@ impl Opt {
             /// Topic is optional
             Command::Play { topic } => {
                 // Should topic be left empty, then randomize topic
-                let topics = files::load_topics(option.verbose)?;
-                let mut leaderboards = files::load_leaderboards(option.verbose)?;
+                let topics = load_topics(option.verbose)?;
+                let mut leaderboards = load_leaderboards(option.verbose)?;
 
                 let top = match topics.get_topic(&topic){
                     Some(e) => e,
@@ -63,7 +68,7 @@ impl Opt {
                 Ok(())
             },
             Command::Leaderboards { topic } => {
-                let mut leaderboards = files::load_leaderboards(option.verbose)?;
+                let mut leaderboards = load_leaderboards(option.verbose)?;
                 match leaderboards.get_leaderboards_by_name(&topic){
                     Some(t) => {
                         for i in t{
@@ -75,7 +80,7 @@ impl Opt {
                 Ok(())
             },
             Command::List{} => {
-                let topics = files::load_topics(option.verbose)?;
+                let topics = load_topics(option.verbose)?;
                 // Lists all topics
                 topics.print_all_topics();
                 Ok(())
