@@ -28,17 +28,13 @@ struct Quiz {
 
 #[derive(Clone)]
 pub struct Quizzes {
-    topic_id: u64,
-    name: String,
     list: HashMap<u64, Quiz>, 
     correct: u64, // Number of questions answered correctly
 }
 
 impl Quizzes {
-    pub fn new(topic_id: u64, name: String) -> Self {
+    pub fn new() -> Self {
         Self{
-            topic_id,
-            name,
             list: HashMap::new(),
             correct: 0,
         }
@@ -55,17 +51,6 @@ impl Quizzes {
             asked: false
         };
         self.list.insert(id, x);
-    }
-
-    /// Convert from String to each of the datatypes required to insert as Quiz
-    pub fn raw_add(&mut self, id: &str, name: &str, description: &str, answer: &str, choices: &str) -> Result<(), ParseIntError> {
-        let f1 = convert_to_integer(id)?; // get_input_as_integer(id); 
-        let f2 = name.trim();
-        let f3 = description.trim();
-        let f4 = to_choices_enum(answer).unwrap();
-        let f5 = split_str_to_vec(choices, '|');
-        self.add(f1, f2, f3, f4, f5);
-        Ok(())
     }
 
     // TODO: Cursed double clone, perhaps there is a way to prevent it?

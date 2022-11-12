@@ -3,11 +3,11 @@ use rand::Rng;
 
 #[derive(Debug, Clone)]
 pub struct Topic {
-    topic_id: u64,
-    leaderboard_name: String,
-    file_name: String,
-    topic_name: String,
-    topic_description: String
+    pub topic_id: u64,
+    pub leaderboard_name: String,
+    pub file_name: String,
+    pub topic_name: String,
+    pub topic_description: String
 }
 
 #[derive(Debug)]
@@ -23,7 +23,7 @@ impl Topics {
         }
     }
 
-    /// 
+    /// Inserts a new topic name
     pub fn add_new_topic(&mut self, topic_id: u64, leaderboard_name: &str, filename: &str, topic_name: &str, topic_description: &str) {
         self.list.insert(topic_id, Topic {
             topic_id,
