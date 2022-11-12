@@ -77,8 +77,10 @@ impl Topics {
         if self.list.is_empty() {
             return;
         }
+        let mut x = 1;
         for i in &self.list {
-            println!("{}. {} | {}", i.1.topic_id, i.1.topic_name, i.1.topic_description);
+            println!("{}. {} | {}", x, i.1.topic_name, i.1.topic_description);
+            x = x + 1;
         }
     }
 }
