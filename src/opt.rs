@@ -31,18 +31,12 @@ impl Opt {
             /// Topic is optional
             Command::Play { topic } => {
 
-                // If topic isn't given an argument:
-                // 1. List all Topics
-                // 2. Wait for input
-                // 3. On input, go to get_topic
-                // 4. If get_topic does not find the related topic, end
-                // 5. Else proceed to play
-
+                // Should topic be left empty, then randomize topic
                 let topics = files::load_topics(option.verbose)?;
                 let mut leaderboards = files::load_leaderboards(option.verbose)?;
 
                 if topic == None{
-                    
+
                 }
 
 
