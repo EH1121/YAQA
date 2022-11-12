@@ -1,6 +1,9 @@
+use std::time::Instant;
+
+use chrono::Local;
 use structopt::StructOpt;
 
-use crate::files::{self, load_topics};
+use crate::files::{self, load_topics, load_quizzes};
 use crate::leaderboards;
 
 #[derive(StructOpt)]
@@ -33,10 +36,28 @@ impl Opt {
                 // Should topic be left empty, then randomize topic
                 let topics = files::load_topics(option.verbose)?;
                 let mut leaderboards = files::load_leaderboards(option.verbose)?;
-                let top = match topic{
-                    Some(_) => topics.get_topic_by_name(&topic.unwrap()),
-                    None => topics.get_topic(0, true),
+
+                let top = match topics.get_topic(&topic){
+                    Some(e) => e,
+                    None => {
+                        let x = topic.unwrap();
+                        println!("Topic {x} Not Found");
+                        return Ok(());
+                    }
                 };
+
+                let mut y = load_quizzes(top, option.verbose)?;
+                
+                let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
+                println!("{chrono_datetime}");
+                let curr_time = Instant::now();
+                y.ask();
+                let curr_time = Instant::now().duration_since(curr_time);
+
+                // Leaderboards update?
+
+
+
                 Ok(())
             },
             Command::Leaderboards { topic } => {

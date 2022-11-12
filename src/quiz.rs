@@ -30,6 +30,7 @@ struct Quiz {
 pub struct Quizzes {
     list: HashMap<u64, Quiz>, 
     correct: u64, // Number of questions answered correctly
+    questions_asked: u64 // Number of questions that has been asked
 }
 
 impl Quizzes {
@@ -37,6 +38,7 @@ impl Quizzes {
         Self{
             list: HashMap::new(),
             correct: 0,
+            questions_asked: 0
         }
     }
 
@@ -96,6 +98,7 @@ impl Quizzes {
                 question.asked = true;
                 self.list.insert(question.id, question);
             }
+            self.questions_asked += 1
         }
     }
 }
