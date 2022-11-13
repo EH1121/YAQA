@@ -43,45 +43,14 @@ pub fn get_input_as_integer(line: &str) -> u64 {
     }
 }
 
-/// Converts string to local datetime
-// pub fn convert_to_local_datetime(datetime_timezone: &str) -> Result<DateTime<Local>, String>{
-
-//     let fields: Vec<_> = datetime_timezone.split(' ').collect();
-//     let local_timezone = match fields.get(2){
-//         Some(lt) => Local.(lt.to_string()),
-//         None => return Err("Failed to convert datetime to local".to_string()),
-//     };
-
-
-//     let datetime = match fields.get(0){
-//         Some(d) => {
-//             match fields.get(1){
-//                 Some(t) => {
-//                     d.to_string().push(' ');
-//                     d.to_string().push_str(t);
-//                     d
-//                 }
-//                 None => return Err("Failed to convert datetime to local".to_string()),
-//             }
-//         }
-//         None => return Err("Failed to convert datetime to local".to_string()),
-//     };
-
-//     let Naivedt = match datetime.parse::<NaiveDateTime>(){
-//         Ok(x) => {
-//             return Ok(Local.from_local_datetime(&x).unwrap().with_timezone(local_timezone));
-    
-//             },
-//             Err(_) => return Err("Failed to convert datetime to local".to_string()),
-//     };
-
-//     // match datetime.parse::<NaiveDateTime>(){
-//     //     Ok(x) => {
-//         // return Ok(Local.from_local_datetime(datetime).unwrap().with_timezone(local_timezone));
-
-//         // },
-//         // Err(_) => return Err("Failed to convert datetime to local".to_string()),
-// }
+#[allow(dead_code)]
+pub fn repeat_char(times: usize, ch: char) -> String{
+    let mut str = String::new();
+    for _ in 0..times{
+        str.push(ch);
+    }
+    str
+}
 
 /// Splits input string by char, which is then put into a vector of string
 #[allow(dead_code)]
@@ -148,3 +117,4 @@ pub fn get_string_input(print_line: &str, min_len: usize, max_len: usize) -> Str
         }
     }
 }
+

@@ -170,24 +170,6 @@ pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, String, S
         None => return Err("Missing end_time".to_string())
     };
 
-
-    // let start_time = match strings.get(3) {
-    //     Some(str) => match helpers::convert_to_local_datetime(str) {
-    //         Ok(v) => v,
-    //         Err(_) => {
-    //             return Err("ParseDateTimeError".to_string())}
-    //     },
-    //     None => return Err("Missing start time".to_string())
-    // };
-
-    // let end_time = match strings.get(4) {
-    //     Some(str) => match helpers::convert_to_local_datetime(str) {
-    //         Ok(v) => v,
-    //         Err(_) => return Err("ParseDateTimeError".to_string())
-    //     },
-    //     None => return Err("Missing end time".to_string())
-    // };
-
     let duration = match strings.get(5) {
         Some(str) => match helpers::convert_to_integer(str) {
             Ok(v) => v,
