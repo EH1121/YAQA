@@ -79,11 +79,14 @@ impl Topics {
         }
         let mut x = 1;
 
+        println!("--------------------------------------------------------------------------------");
         println!("no. |   topic name   | topic description");
+        println!("--------------------------------------------------------------------------------");
         for i in &self.list {
             let k = "   topic name   ".len() - i.1.topic_name.len() - 1;
             println!("{}.  | {}{}| {}", x, i.1.topic_name, repeat_char(k, ' '),i.1.topic_description);
             x += 1;
+            println!("--------------------------------------------------------------------------------");
         }
     }
 }

@@ -45,11 +45,14 @@ impl Leaderboards {
     pub fn print_leaderboard_by_topic(&mut self, topic_name: &str){
         match self.get_leaderboards_by_name(topic_name){
             Some(t) => {
+                println!("------------------------------------------------------------------------------------------------------------------------------");
                 println!("no. |              start time              |                 end time             | duration |     player name     |   score");
+                println!("------------------------------------------------------------------------------------------------------------------------------");
                 for (idx, i) in t.iter().enumerate() {
                     let x = "     player name     ".len() - i.player_name.len() - 1;
                     let y = " duration ".len() - i.duration.to_string().len() - 1;
                     println!("{}.  | {} | {} | {}{}| {}{}| {}", idx + 1, i.start_time, i.end_time, i.duration, repeat_char(y, ' '), i.player_name, repeat_char(x, ' '), i.score);
+                    println!("------------------------------------------------------------------------------------------------------------------------------");
                 }
             },
             None => {
