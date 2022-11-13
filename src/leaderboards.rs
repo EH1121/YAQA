@@ -20,7 +20,7 @@ impl Leaderboards {
         }
     }
 
-    pub fn leaderboards_as_vec(&self) -> Vec<&Leaderboard>{
+    pub fn leaderboards_as_vec(&self) -> Vec<&Leaderboard> {
         self.list.iter().collect()
     }
 
@@ -36,14 +36,15 @@ impl Leaderboards {
     }
 
     pub fn get_leaderboards_by_name(&mut self, topic_name: &str) -> Option<Vec<&Leaderboard>> {
-        let mut x: Vec<&Leaderboard> = self.list.iter().filter(|v| v.topic_name.to_lowercase() == topic_name.to_lowercase()).collect();
+        let mut x: Vec<&Leaderboard> = self.list.iter().filter(|v| v.topic_name.to_lowercase().eq(&topic_name.to_lowercase())).collect();
         if !x.is_empty() {
             x.sort_by(|a, b| b.score.total_cmp(&a.score));
             return Some(x);
         }
         None
     }
-    pub fn print_leaderboard_by_topic(&mut self, topic_name: &str){
+
+    pub fn print_leaderboard_by_topic(&mut self, topic_name: &str) {
         match self.get_leaderboards_by_name(topic_name) {
             Some(t) => {
                 println!("------------------------------------------------------------------------------------------------------------------------------");
@@ -52,7 +53,7 @@ impl Leaderboards {
                 for (idx, i) in t.iter().enumerate() {
                     let x = "     player name     ".len() - i.player_name.len() - 1;
                     let y = " duration ".len() - i.duration.to_string().len() - 1;
-                    println!("{}.  | {} | {} | {}{}| {}{}| {}", idx + 1, i.start_time, i.end_time, i.duration, repeat_char(y, ' '), i.player_name, repeat_char(x, ' '), i.score);
+                    println!("{}.  | {} | {} | {}{}| {}{}| {}", idx + 1, i.start_time, i.end_time, i.duration, helpers::repeat_char(y, ' '), i.player_name, helpers::repeat_char(x, ' '), i.score);
                     println!("------------------------------------------------------------------------------------------------------------------------------");
                 }
             },

@@ -17,7 +17,7 @@ enum Command {
     Leaderboards {
         topic: String
     },
-    List,
+    List
 }
 
 #[derive(StructOpt)]
@@ -45,11 +45,11 @@ impl Opt {
                         return Ok(());
                     }
                 };
-                let mut y = files::load_quizzes(&top, option.verbose)?;
+                let mut quiz = files::load_quizzes(&top, option.verbose)?;
                 let start_dt = Local::now();
-                y.ask(5);
+                quiz.ask(5);
                 let end_dt = Local::now();
-                let score: f64 = (y.correct as f64 / y.questions_asked as f64) * 100.0;
+                let score: f64 = (quiz.correct as f64 / quiz.questions_asked as f64) * 100.0;
                 let int_duration = helpers::convert_to_integer(&(end_dt - start_dt).num_seconds().to_string()).unwrap();
                 let top_name = top.topic_name;
                 let player_name = helpers::get_string_input("Input player name [5 - 20]: ", 5, 20);

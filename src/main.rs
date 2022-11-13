@@ -1,12 +1,10 @@
 use structopt::StructOpt;
 
 mod opt;
-
 mod leaderboards;
 mod answers;
 mod quiz;
 mod topics_csv;
-
 mod files;
 mod helpers;
 

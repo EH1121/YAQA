@@ -78,7 +78,7 @@ pub fn print(to_print: &str) {
 //         // Err(_) => return Err("Failed to convert datetime to local".to_string()),
 // }
 
-pub fn repeat_char(times: usize, ch: char) -> String{
+pub fn repeat_char(times: usize, ch: char) -> String {
     let mut str = String::new();
     for _ in 0..times{
         str.push(ch);

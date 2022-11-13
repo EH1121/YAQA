@@ -27,7 +27,7 @@ pub struct Quizzes {
 
 impl Quizzes {
     pub fn new() -> Self {
-        Self{
+        Self {
             list: HashMap::new(),
             correct: 0,
             questions_asked: 0

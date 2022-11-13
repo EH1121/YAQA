@@ -99,7 +99,7 @@ fn parse_quiz(string: &str) -> Result<(u64, String, String, answers::Choices, Ve
 
     let quiz_answer = match strings.get(3).filter(|str| !str.is_empty()) {
         Some(str) => {
-            match answers::to_choices_enum(str){
+            match answers::to_choices_enum(str) {
                 Ok(e) => e,
                 Err(_) => return Err("Error parsing answer".to_string())
             }
@@ -206,7 +206,6 @@ pub fn write_leaderboards(leaderboards: leaderboards::Leaderboards) -> std::io::
     file.write_all(b"topic_name,player_name,score,start_time,end_time,duration\n")?;
     file.flush()?;
     for ldb in leaderboards.leaderboards_as_vec() {
-        println!("{},{},{},{},{},{}\n", ldb.topic_name, ldb.player_name, ldb.score, ldb.start_time, ldb.end_time, ldb.duration);
         file.write_all(format!("{},{},{},{},{},{}\n", ldb.topic_name, ldb.player_name, ldb.score, ldb.start_time, ldb.end_time, ldb.duration).as_bytes())?;
     }
     file.flush()?;
