@@ -74,8 +74,8 @@ impl Quizzes {
     /// If an unasked question is found, it will mark it as an asked question
     /// 
     /// Uses print_pertanyaan to output the question
-    pub fn ask(&mut self) {
-        for i in 0..5 {
+    pub fn ask(&mut self, num_of_questions: usize) {
+        for i in 0..num_of_questions {
             let mut question = match self.get_unasked_question() {
                 Some(quiz) => quiz,
                 None => {
