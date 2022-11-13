@@ -1,0 +1,6 @@
+question_id,name,description,answer,choices
+0,Rust Basics,Which of the following is not part of Rust?,d,Prevents Memory Leak|Prevents Data Race Conditions|Enforcing Compile Time Checks|Has automated Garbage Collection
+1,Rust Basics,What is the output of Result?,c,Some & Err|Some & None|Ok & Err|Ok & Some
+2,Rust Basics,What is the output of Option?,b,Some & Err|Some & None|Ok & Err|Ok & Some
+3,Rust Basics,What are libraries called in rust?,a,crates|library|npm|std
+4,Rust Basics,Which of the following statements can be used to handle the return value of Result?,c,switch|for|match|loop
