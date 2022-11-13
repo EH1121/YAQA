@@ -126,3 +126,18 @@ pub fn get_char_input(print_line: &str, from: char, to: char, case_insensitive: 
         }
     }
 }
+
+pub fn get_string_input(print_line: &str, min_len: usize, max_len: usize) -> String {
+    loop {
+        let mut input = String::new();
+        print(print_line);
+        while std::io::stdin().read_line(&mut input).is_err() {
+            println!("Failed to input string")
+        }
+        if !input.trim().is_empty(){
+            if input.len() >= min_len && input.len() <= max_len {
+                return input.trim().to_string();
+            }
+        }
+    }
+}

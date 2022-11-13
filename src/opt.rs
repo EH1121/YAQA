@@ -1,15 +1,15 @@
 
 
-use chrono::{Local, Duration};
+use chrono::Local;
 use structopt::StructOpt;
 
 use crate::files::{
     load_topics, 
     load_quizzes, 
-    load_leaderboards
+    load_leaderboards, write_leaderboards
 };
 
-use crate::leaderboards;
+use crate::helpers::{get_string_input, convert_to_float, convert_to_integer};
 
 #[derive(StructOpt)]
 enum Command {
@@ -54,35 +54,28 @@ impl Opt {
                 let mut y = load_quizzes(&top, option.verbose)?;
                 
                 let start_dt = Local::now();
-                // let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
 
                 y.ask();
 
-                // let z = chrono_datetime
                 let end_dt = Local::now();
 
-                // Leaderboards update?
-
-                // Ask for name input?
                 let score: f64 = (y.correct as f64 / y.questions_asked as f64) * 100.0;
+
                 let duration = end_dt - start_dt;
+                let int_duration = convert_to_integer(&duration.num_seconds().to_string()).unwrap();
+
                 let top_name = top.topic_name;
 
+                let player_name = get_string_input("Input player name [5 - 20]: ", 5, 20);
 
+                leaderboards.add_new_leaderboards(&top_name, &player_name, score, start_dt.to_string(), end_dt.to_string(), int_duration);
+
+                write_leaderboards(leaderboards);
 
                 Ok(())
             },
             Command::Leaderboards { topic } => {
                 let mut leaderboards = load_leaderboards(option.verbose)?;
-                // match leaderboards.get_leaderboards_by_name(&topic){
-                //     Some(t) => {
-                //         // for i in t{
-                //             // i.print();
-
-                //         // }
-                //     },
-                //     None => println!("No leaderboards for {topic} found"),
-                // }
 
                 leaderboards.print_leaderboard_by_topic(&topic);
                 Ok(())
