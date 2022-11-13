@@ -39,10 +39,10 @@ impl Opt {
             /// Topic is optional
             Command::Play { topic } => {
                 // Should topic be left empty, then randomize topic
-                let topics = load_topics(option.verbose)?;
+                let play_topic = load_topics(option.verbose)?;
                 let mut leaderboards = load_leaderboards(option.verbose)?;
 
-                let top = match topics.get_topic(&topic){
+                let top = match play_topic.get_topic(&topic){
                     Some(e) => e,
                     None => {
                         let x = topic.unwrap();
@@ -51,7 +51,7 @@ impl Opt {
                     }
                 };
 
-                let mut y = load_quizzes(top, option.verbose)?;
+                let mut y = load_quizzes(&top, option.verbose)?;
                 
                 let start_dt = Local::now();
                 // let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
@@ -61,19 +61,12 @@ impl Opt {
                 // let z = chrono_datetime
                 let end_dt = Local::now();
 
-                let duration = end_dt - start_dt;
-
-                // let chrono_datetime_since = Local::now().format("%Y-%m-%d %H-%M-%S");
-
-                // let duration = chrono_datetime - chrono_datetime_since;
-
-
-
-                
                 // Leaderboards update?
 
                 // Ask for name input?
                 let score: f64 = (y.correct as f64 / y.questions_asked as f64) * 100.0;
+                let duration = end_dt - start_dt;
+                let top_name = top.topic_name;
 
 
 

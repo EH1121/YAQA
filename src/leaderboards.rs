@@ -7,7 +7,7 @@ pub struct Leaderboard {
     score: f64,
     start_time: String,
     end_time: String,
-    duration: u64
+    duration: f64
 }
 
 #[derive(Debug)]
@@ -22,7 +22,7 @@ impl Leaderboards {
         }
     }
 
-    pub fn add_new_leaderboards(&mut self, topic_name: &str, player_name: &str, score: f64, start_time: String, end_time: String, duration: u64) {
+    pub fn add_new_leaderboards(&mut self, topic_name: &str, player_name: &str, score: f64, start_time: String, end_time: String, duration: f64) {
         self.list.push(Leaderboard{
             topic_name: topic_name.to_lowercase(), 
             player_name: player_name.to_lowercase(), 
