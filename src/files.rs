@@ -1,18 +1,21 @@
 use std::{
     path::PathBuf, 
     fs::File, 
-    io::Read
+    io::{
+        Read, 
+        Write
+    }
 };
 
 use crate::{
-    topics_csv::{self, Topic}, 
+    topics_csv, 
     leaderboards, 
-    helpers::{self, split_str_to_vec},
-    quiz::Quizzes, 
-    answers::{Choices, to_choices_enum}
+    helpers,
+    quiz, 
+    answers
 };
 
-// Topics: Read from file - DONE
+// Topics: Read from file
 /// Parses input from string and adds it to Topics
 fn parse_topic(string: &str) -> Result<(u64, String, String, String, String), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
@@ -71,9 +74,9 @@ pub fn load_topics(verbose: bool) -> std::io::Result<topics_csv::Topics> {
     Ok(parse_topics(buffer, verbose))
 }
 
-// Quiz: Read from file - DONE
+// Quiz: Read from file
 /// Parses input from string and adds it to Topics
-fn parse_quiz(string: &str) -> Result<(u64, String, String, Choices, Vec<String>), String> {
+fn parse_quiz(string: &str) -> Result<(u64, String, String, answers::Choices, Vec<String>), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
 
     let quiz_id = match strings.first() {
@@ -96,7 +99,7 @@ fn parse_quiz(string: &str) -> Result<(u64, String, String, Choices, Vec<String>
 
     let quiz_answer = match strings.get(3).filter(|str| !str.is_empty()) {
         Some(str) => {
-            match to_choices_enum(str){
+            match answers::to_choices_enum(str){
                 Ok(e) => e,
                 Err(_) => return Err("Error parsing answer".to_string())
             }
@@ -105,14 +108,14 @@ fn parse_quiz(string: &str) -> Result<(u64, String, String, Choices, Vec<String>
     };
 
     let quiz_choices = match strings.get(4).filter(|str| !str.is_empty()) {
-        Some(str) => split_str_to_vec(str, '|'),
+        Some(str) => helpers::split_str_to_vec(str, '|'),
         None => return Err("Missing quiz choices".to_string())
     };
     Ok(( quiz_id, quiz_name, quiz_description, quiz_answer, quiz_choices))
 }
 
-pub fn parse_quizzes(quizzes: String, filename: &str, verbose: bool) -> Quizzes { //-> Quizzes{
-    let mut qz = Quizzes::new();
+pub fn parse_quizzes(quizzes: String, filename: &str, verbose: bool) -> quiz::Quizzes {
+    let mut qz = quiz::Quizzes::new();
     for (i, q) in quizzes.split('\n').enumerate() {
         if !q.is_empty() {
             match parse_quiz(q) {
@@ -124,12 +127,7 @@ pub fn parse_quizzes(quizzes: String, filename: &str, verbose: bool) -> Quizzes 
     qz
 }
 
-pub fn load_quizzes(topic: &Topic, verbose: bool) -> std::io::Result<Quizzes> { //-> Quizzes{
-    // topic_id: u64,
-    // leaderboard_name: String,
-    // file_name: String,
-    // topic_name: String,
-    // topic_description: String
+pub fn load_quizzes(topic: &topics_csv::Topic, verbose: bool) -> std::io::Result<quiz::Quizzes> {
     let path = PathBuf::from("src/data/questions/".to_owned() + &topic.file_name);
     let mut file = File::open(path)?;
     let mut buffer = String::new();
@@ -186,7 +184,7 @@ fn parse_leaderboards(leaderboards: String, verbose: bool) -> leaderboards::Lead
     for (i, leaderboard) in leaderboards.split('\n').enumerate() {
         if !leaderboard.is_empty() {
             match parse_leaderboard(leaderboard) {
-                Ok(ldb) => ldbs.add_new_leaderboards(&ldb.0, &ldb.1, ldb.2.clone(), ldb.3.clone(), ldb.4, ldb.5),
+                Ok(ldb) => ldbs.add_new_leaderboards(&ldb.0, &ldb.1, ldb.2, ldb.3, ldb.4, ldb.5),
                 Err(err) => if verbose { println!("Error in parsing lines in leaderboards.csv on line {}: {err}", i+1) }
             }
         }
@@ -203,7 +201,14 @@ pub fn load_leaderboards(verbose: bool) -> std::io::Result<leaderboards::Leaderb
     Ok(parse_leaderboards(buffer, verbose))
 }
 
-// TODO: Write
-pub fn write_leaderboards(leaderboards: leaderboards::Leaderboards) {
-    todo!();
+pub fn write_leaderboards(leaderboards: leaderboards::Leaderboards) -> std::io::Result<()> {
+    let mut file = std::fs::OpenOptions::new().write(true).truncate(true).open(PathBuf::from("src/data/leaderboards.csv"))?;
+    file.write_all(b"topic_name,player_name,score,start_time,end_time,duration\n")?;
+    file.flush()?;
+    for ldb in leaderboards.leaderboards_as_vec() {
+        println!("{},{},{},{},{},{}\n", ldb.topic_name, ldb.player_name, ldb.score, ldb.start_time, ldb.end_time, ldb.duration);
+        file.write_all(format!("{},{},{},{},{},{}\n", ldb.topic_name, ldb.player_name, ldb.score, ldb.start_time, ldb.end_time, ldb.duration).as_bytes())?;
+    }
+    file.flush()?;
+    Ok(())
 }
