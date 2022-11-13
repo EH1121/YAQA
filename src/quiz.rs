@@ -89,7 +89,7 @@ impl Quizzes {
                 },
             };
             self.print_pertanyaan(&question, i + 1);
-            let answered = get_char_input("Input ['A' | 'B' | 'C' | 'D']: ", 'A', 'D');
+            let answered = get_char_input("Input ['A' | 'B' | 'C' | 'D']: ", 'A', 'D', true);
             if to_choices_enum(&answered.to_string()).unwrap() == question.answer{
                 self.correct += 1;
             }

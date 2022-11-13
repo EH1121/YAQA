@@ -126,7 +126,7 @@ pub fn parse_quizzes(quizzes: String, filename: &str, verbose: bool) -> Quizzes 
     qz
 }
 
-pub fn load_quizzes(topic: Topic, verbose: bool) -> std::io::Result<Quizzes> { //-> Quizzes{
+pub fn load_quizzes(topic: &Topic, verbose: bool) -> std::io::Result<Quizzes> { //-> Quizzes{
     // topic_id: u64,
     // leaderboard_name: String,
     // file_name: String,
@@ -141,7 +141,7 @@ pub fn load_quizzes(topic: Topic, verbose: bool) -> std::io::Result<Quizzes> { /
 
 // Leaderboards: Read and Write
 /// Parses leaderboard with format: topic_name, player_name, score, duration
-pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, DateTime<Local>, DateTime<Local>, u64), String> {
+pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, String, String, u64), String> {
     let strings: Vec<&str> = string.trim_end().split(',').collect();
 
     let topic_name = match strings.first().filter(|str| !str.is_empty()) {
@@ -162,26 +162,38 @@ pub fn parse_leaderboard(string: &str) -> Result<(String, String, f64, DateTime<
         None => return Err("Missing topic_id".to_string())
     };
 
-    let start_time = match strings.get(3) {
-        Some(str) => match helpers::convert_to_local_datetime(str) {
-            Ok(v) => v,
-            Err(_) => return Err("ParseIntError".to_string())
-        },
-        None => return Err("Missing topic_id".to_string())
+    let start_time = match strings.get(3).filter(|str| !str.is_empty()) {
+        Some(str) => str.to_string(),
+        None => return Err("Missing start_time".to_string())
     };
 
-    let end_time = match strings.get(4) {
-        Some(str) => match helpers::convert_to_local_datetime(str) {
-            Ok(v) => v,
-            Err(_) => return Err("ParseIntError".to_string())
-        },
-        None => return Err("Missing topic_id".to_string())
+    let end_time = match strings.get(4).filter(|str| !str.is_empty()) {
+        Some(str) => str.to_string(),
+        None => return Err("Missing end_time".to_string())
     };
+
+
+    // let start_time = match strings.get(3) {
+    //     Some(str) => match helpers::convert_to_local_datetime(str) {
+    //         Ok(v) => v,
+    //         Err(_) => {
+    //             return Err("ParseDateTimeError".to_string())}
+    //     },
+    //     None => return Err("Missing start time".to_string())
+    // };
+
+    // let end_time = match strings.get(4) {
+    //     Some(str) => match helpers::convert_to_local_datetime(str) {
+    //         Ok(v) => v,
+    //         Err(_) => return Err("ParseDateTimeError".to_string())
+    //     },
+    //     None => return Err("Missing end time".to_string())
+    // };
 
     let duration = match strings.get(5) {
         Some(str) => match helpers::convert_to_integer(str) {
             Ok(v) => v,
-            Err(_) => return Err("ParseIntError".to_string())
+            Err(_) => return Err("ParseFloatError".to_string())
         },
         None => return Err("Missing topic_id".to_string())
     };

@@ -42,15 +42,44 @@ pub fn get_input_as_integer(line: &str) -> u64 {
 }
 
 /// Converts string to local datetime
-pub fn convert_to_local_datetime(datetime: &str) -> Result<DateTime<Local>, String>{
+// pub fn convert_to_local_datetime(datetime_timezone: &str) -> Result<DateTime<Local>, String>{
 
-    match datetime.parse::<NaiveDateTime>(){
-        Ok(x) => {
-            return Ok(Local.from_local_datetime(&x).unwrap());
-        },
-        Err(_) => return Err("Failed to convert datetime to local".to_string()),
-    };
-}
+//     let fields: Vec<_> = datetime_timezone.split(' ').collect();
+//     let local_timezone = match fields.get(2){
+//         Some(lt) => Local.(lt.to_string()),
+//         None => return Err("Failed to convert datetime to local".to_string()),
+//     };
+
+
+//     let datetime = match fields.get(0){
+//         Some(d) => {
+//             match fields.get(1){
+//                 Some(t) => {
+//                     d.to_string().push(' ');
+//                     d.to_string().push_str(t);
+//                     d
+//                 }
+//                 None => return Err("Failed to convert datetime to local".to_string()),
+//             }
+//         }
+//         None => return Err("Failed to convert datetime to local".to_string()),
+//     };
+
+//     let Naivedt = match datetime.parse::<NaiveDateTime>(){
+//         Ok(x) => {
+//             return Ok(Local.from_local_datetime(&x).unwrap().with_timezone(local_timezone));
+    
+//             },
+//             Err(_) => return Err("Failed to convert datetime to local".to_string()),
+//     };
+
+//     // match datetime.parse::<NaiveDateTime>(){
+//     //     Ok(x) => {
+//         // return Ok(Local.from_local_datetime(datetime).unwrap().with_timezone(local_timezone));
+
+//         // },
+//         // Err(_) => return Err("Failed to convert datetime to local".to_string()),
+// }
 
 /// Splits input string by char, which is then put into a vector of string
 pub fn split_str_to_vec(s: &str, ch: char) -> Vec<String> {
@@ -70,7 +99,7 @@ pub fn convert_to_char(to_parse: &str) -> Result<char, ParseCharError> {
 /// from: Get char from 'A'
 /// 
 /// to: Get char up to 'Z'
-pub fn get_char_input(print_line: &str, from: char, to: char) -> char {
+pub fn get_char_input(print_line: &str, from: char, to: char, case_insensitive: bool) -> char {
     loop {
         let mut input = String::new();
         print(print_line);
@@ -79,11 +108,36 @@ pub fn get_char_input(print_line: &str, from: char, to: char) -> char {
         }
         match convert_to_char(input.trim()) {
             Ok(e) => {
-                if e as u8 >= from as u8 && e as u8 <= to as u8 {
-                    return e;
+                if case_insensitive{
+                    let ch = convert_to_char(&e.to_lowercase().to_string()).unwrap();
+                    let lowercased_from = convert_to_char(&from.to_lowercase().to_string()).unwrap();
+                    let lowercased_to = convert_to_char(&to.to_lowercase().to_string()).unwrap();
+
+                    if ch >= lowercased_from && ch <= lowercased_to {
+                        return e;
+                    }
+                } else {
+                    if e >= from && e <= to {
+                        return  e;
+                    }
                 }
             },
             Err(_) => println!("Invalid Input, Please try again")
+        }
+    }
+}
+
+pub fn get_string_input(print_line: &str, min_len: usize, max_len: usize) -> String {
+    loop {
+        let mut input = String::new();
+        print(print_line);
+        while std::io::stdin().read_line(&mut input).is_err() {
+            println!("Failed to input string")
+        }
+        if !input.trim().is_empty(){
+            if input.len() >= min_len && input.len() <= max_len {
+                return input.trim().to_string();
+            }
         }
     }
 }
