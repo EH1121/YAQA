@@ -55,7 +55,7 @@ impl Opt {
                 
                 let start_dt = Local::now();
 
-                y.ask();
+                y.ask(5);
 
                 let end_dt = Local::now();
 
