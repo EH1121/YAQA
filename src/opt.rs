@@ -9,7 +9,7 @@ use crate::files::{
     load_leaderboards, write_leaderboards
 };
 
-use crate::helpers::{get_string_input, convert_to_float, convert_to_integer};
+use crate::helpers::{get_string_input, convert_to_integer};
 
 #[derive(StructOpt)]
 enum Command {
@@ -36,7 +36,7 @@ impl Opt {
     pub fn run(option: Opt) -> Result<(), std::io::Error> {
         match option.command {
             // TODO: P;ay Game and Use Data
-            /// Topic is optional
+            // Topic is optional
             Command::Play { topic } => {
                 // Should topic be left empty, then randomize topic
                 let play_topic = load_topics(option.verbose)?;

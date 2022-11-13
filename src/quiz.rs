@@ -54,7 +54,7 @@ impl Quizzes {
 
     // TODO: Cursed double clone, perhaps there is a way to prevent it?
     /// Returns a random, yet to be asked question
-    pub fn get_unasked_question(&self) -> Option<Quiz> {
+    fn get_unasked_question(&self) -> Option<Quiz> {
         let x: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
         if !x.is_empty() {
             let rng = rand::thread_rng().gen_range(0..x.len());
@@ -64,7 +64,7 @@ impl Quizzes {
     }
 
     /// Prints question, first the question's name, then the description (detail), then provide the multiple choices
-    pub fn print_pertanyaan(&self, quiz: &Quiz, quiz_number: usize) {
+    fn print_pertanyaan(&self, quiz: &Quiz, quiz_number: usize) {
         println!("{}", quiz.name);
         println!("{}. {}", quiz_number, quiz.description);
         let mut curr_option: u8 = 65;

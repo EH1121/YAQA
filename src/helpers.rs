@@ -4,27 +4,29 @@ use std::{
     io::Write
 };
 
-use chrono::{Local, TimeZone, NaiveDateTime, DateTime};
-
 /// Converts string to integer, otherwise error
+#[allow(dead_code)]
 pub fn convert_to_integer(to_parse: &str) -> Result<u64, ParseIntError> {
     let integer = to_parse.parse::<u64>()?;
     Ok(integer)
 }
 
 /// Converts string to float, otherwise error
+#[allow(dead_code)]
 pub fn convert_to_float(to_parse: &str) -> Result<f64, ParseFloatError> {
     let f = to_parse.parse::<f64>()?;
     Ok(f)
 }
 
 /// For input purposes, immediately flush to console
+#[allow(dead_code)]
 pub fn print(to_print: &str) {
     print!("{}", to_print);
     std::io::stdout().flush().expect("Failed to output line");
 }
 
 /// Helper input function
+#[allow(dead_code)]
 pub fn get_input_as_integer(line: &str) -> u64 {
     loop {
         let mut input = String::new();
@@ -82,11 +84,13 @@ pub fn get_input_as_integer(line: &str) -> u64 {
 // }
 
 /// Splits input string by char, which is then put into a vector of string
+#[allow(dead_code)]
 pub fn split_str_to_vec(s: &str, ch: char) -> Vec<String> {
     s.split(ch).map(|v| v.to_string()).collect()
 }
 
 /// Attempts to convert string to char, takes in a single char, if fail, return ParseCharError
+#[allow(dead_code)]
 pub fn convert_to_char(to_parse: &str) -> Result<char, ParseCharError> {
     let ch = to_parse.parse::<char>()?;
     Ok(ch)
@@ -99,6 +103,7 @@ pub fn convert_to_char(to_parse: &str) -> Result<char, ParseCharError> {
 /// from: Get char from 'A'
 /// 
 /// to: Get char up to 'Z'
+#[allow(dead_code)]
 pub fn get_char_input(print_line: &str, from: char, to: char, case_insensitive: bool) -> char {
     loop {
         let mut input = String::new();
@@ -127,6 +132,8 @@ pub fn get_char_input(print_line: &str, from: char, to: char, case_insensitive: 
     }
 }
 
+/// Helper function to get string input 
+#[allow(dead_code)]
 pub fn get_string_input(print_line: &str, min_len: usize, max_len: usize) -> String {
     loop {
         let mut input = String::new();
