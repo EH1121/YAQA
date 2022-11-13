@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use rand::Rng;
 
+use crate::helpers::repeat_char;
+
 #[derive(Debug, Clone)]
 pub struct Topic {
     pub topic_id: u64,
@@ -76,8 +78,11 @@ impl Topics {
             return;
         }
         let mut x = 1;
+
+        println!("no. |   topic name   | topic description");
         for i in &self.list {
-            println!("{}. {} | {}", x, i.1.topic_name, i.1.topic_description);
+            let k = "   topic name   ".len() - i.1.topic_name.len() - 1;
+            println!("{}.  | {}{}| {}", x, i.1.topic_name, repeat_char(k, ' '),i.1.topic_description);
             x += 1;
         }
     }
