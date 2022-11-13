@@ -4,13 +4,8 @@ use {
 };
 
 use crate::{
-    helpers::{
-        get_char_input,
-    }, 
-    answers::{
-        to_choices_enum, 
-        Choices
-    }
+    helpers, 
+    answers
 };
 
 #[derive(Clone)]
@@ -18,7 +13,7 @@ struct Quiz {
     id: u64, // Starts from 0
     name: String, // example: "Rust lang", "Mathematics"
     description: String, // This is a description of a question ......
-    answer: Choices, // "a" / "b" / "c" / "d"
+    answer: answers::Choices, // "a" | "b" | "c" | "d" (or)
     choices: Vec<String>, // Vectors of multiple choices
     asked: bool // to prevent duplicates
 }
@@ -40,8 +35,8 @@ impl Quizzes {
     }
 
     /// Add quiz to list
-    pub fn add(&mut self, id: u64, name: &str, description: &str, answer: Choices, choices: Vec<String>) {
-        let x = Quiz {
+    pub fn add(&mut self, id: u64, name: &str, description: &str, answer: answers::Choices, choices: Vec<String>) {
+        let quiz = Quiz {
             id,
             name: name.to_string(),
             description: description.to_string(),
@@ -49,16 +44,16 @@ impl Quizzes {
             choices,
             asked: false
         };
-        self.list.insert(id, x);
+        self.list.insert(id, quiz);
     }
 
-    // TODO: Cursed double clone, perhaps there is a way to prevent it?
+    // TODO: Deref Unwrap to Clone... ?
     /// Returns a random, yet to be asked question
     fn get_unasked_question(&self) -> Option<Quiz> {
-        let x: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
-        if !x.is_empty() {
-            let rng = rand::thread_rng().gen_range(0..x.len());
-            return Some(x.get(rng).unwrap().clone().clone());
+        let quiz: Vec<_> = self.list.iter().filter(|v| !v.1.asked).map(|v| v.1).collect();
+        if !quiz.is_empty() {
+            let rng = rand::thread_rng().gen_range(0..quiz.len());
+            return Some((*quiz.get(rng).unwrap()).clone());
         }
         None
     }
@@ -68,7 +63,7 @@ impl Quizzes {
         println!("{}", quiz.name);
         println!("{}. {}", quiz_number, quiz.description);
         let mut curr_option: u8 = 65;
-        for i in &quiz.choices{
+        for i in &quiz.choices {
             println!("{}. {}", curr_option as char, i);
             curr_option += 1;
         }
@@ -82,15 +77,15 @@ impl Quizzes {
     pub fn ask(&mut self, num_of_questions: usize) {
         for i in 0..num_of_questions {
             let mut question = match self.get_unasked_question() {
-                Some(q) => q,
+                Some(quiz) => quiz,
                 None => {
                     println!("Tidak ada pertanyaan lagi yang dapat ditanyakan");
                     return;
                 },
             };
             self.print_pertanyaan(&question, i + 1);
-            let answered = get_char_input("Input ['A' | 'B' | 'C' | 'D']: ", 'A', 'D', true);
-            if to_choices_enum(&answered.to_string()).unwrap() == question.answer{
+            let answered = helpers::get_char_input("Input ['A' | 'B' | 'C' | 'D']: ", 'A', 'D', true);
+            if answers::to_choices_enum(&answered.to_string()).unwrap() == question.answer{
                 self.correct += 1;
             }
             question.asked = true;
