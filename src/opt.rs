@@ -1,4 +1,4 @@
-use std::time::Instant;
+
 
 use chrono::{Local, Duration};
 use structopt::StructOpt;
@@ -53,18 +53,26 @@ impl Opt {
 
                 let mut y = load_quizzes(top, option.verbose)?;
                 
+                let start_dt = Local::now();
                 // let chrono_datetime = Local::now().format("%Y-%m-%d %H-%M-%S");
 
                 y.ask();
 
                 // let z = chrono_datetime
+                let end_dt = Local::now();
+
+                let duration = end_dt - start_dt;
 
                 // let chrono_datetime_since = Local::now().format("%Y-%m-%d %H-%M-%S");
 
                 // let duration = chrono_datetime - chrono_datetime_since;
 
+
+
                 
                 // Leaderboards update?
+
+                // Ask for name input?
                 let score: f64 = (y.correct as f64 / y.questions_asked as f64) * 100.0;
 
 
@@ -73,14 +81,17 @@ impl Opt {
             },
             Command::Leaderboards { topic } => {
                 let mut leaderboards = load_leaderboards(option.verbose)?;
-                match leaderboards.get_leaderboards_by_name(&topic){
-                    Some(t) => {
-                        for i in t{
-                            i.print();
-                        }
-                    },
-                    None => println!("No leaderboards for {topic} found"),
-                }
+                // match leaderboards.get_leaderboards_by_name(&topic){
+                //     Some(t) => {
+                //         // for i in t{
+                //             // i.print();
+
+                //         // }
+                //     },
+                //     None => println!("No leaderboards for {topic} found"),
+                // }
+
+                leaderboards.print_leaderboard_by_topic(&topic);
                 Ok(())
             },
             Command::List{} => {
