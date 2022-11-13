@@ -1,5 +1,3 @@
-use chrono::{Local, DateTime};
-
 #[derive(Debug)]
 pub struct Leaderboard {
     topic_name: String,
